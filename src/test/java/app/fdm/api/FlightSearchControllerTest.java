@@ -38,9 +38,6 @@ class FlightSearchControllerTest {
     @Test
     void searchFlights_WithValidParameters_ShouldReturnFlights() {
         // Arrange
-        String airline = "TestAirline";
-        String from = "JFK";
-        String to = "LAX";
         String departureTime = "2025-06-22T10:00:00Z";
         String arrivalTime = "2025-06-22T15:00:00Z";
 
@@ -49,7 +46,7 @@ class FlightSearchControllerTest {
 
         // Act
         ResponseEntity<FlightSearchResponse> response = controller.searchFlights(
-                airline, from, to, departureTime, arrivalTime);
+                "JFK",  "LAX", "TestAirline", departureTime, arrivalTime);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -67,7 +64,7 @@ class FlightSearchControllerTest {
 
         // Act
         ResponseEntity<FlightSearchResponse> response = controller.searchFlights(
-                null, null, null, null, null);
+                "JFK", "LAX", null, null, null);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -79,7 +76,7 @@ class FlightSearchControllerTest {
     void searchFlights_WithInvalidDateTime_ShouldReturnBadRequest() {
         // Act
         ResponseEntity<FlightSearchResponse> response = controller.searchFlights(
-                "TestAirline", "JFK", "LAX", "invalid-date", "invalid-date");
+                "JFK", "LAX", "TestAirline", "invalid-date", "invalid-date");
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -95,7 +92,7 @@ class FlightSearchControllerTest {
 
         // Act
         ResponseEntity<FlightSearchResponse> response = controller.searchFlights(
-                null, null, null, departureTime, null);
+                "JFK", "LAX", null, departureTime, null);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -112,7 +109,7 @@ class FlightSearchControllerTest {
 
         // Act
         ResponseEntity<FlightSearchResponse> response = controller.searchFlights(
-                null, null, null, null, arrivalTime);
+                "JFK", "LAX", null, null, arrivalTime);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
