@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: flight-data-management
+  datasource:
+    url: jdbc:h2:mem:flights
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+crazy-supplier:
+  url: https://api.crazy-supplier.com/flights
