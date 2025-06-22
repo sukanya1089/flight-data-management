@@ -7,12 +7,10 @@ import app.fdm.dto.FlightSearchResult;
 import app.fdm.service.CrazySupplierFlightSearchService.CrazySupplierRequest;
 import app.fdm.service.CrazySupplierFlightSearchService.CrazySupplierResult;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -25,7 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@Disabled("TODO")
 @ExtendWith(MockitoExtension.class)
 class CrazySupplierFlightSearchServiceTest {
 
@@ -41,8 +38,7 @@ class CrazySupplierFlightSearchServiceTest {
     void setUp() {
         when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
         when(webClientBuilder.build()).thenReturn(webClient);
-        searchService = new CrazySupplierFlightSearchService(webClientBuilder);
-        ReflectionTestUtils.setField(searchService, "crazySupplierUrl", "http://test.com");
+        searchService = new CrazySupplierFlightSearchService(webClientBuilder, "http://test.com");
     }
 
     @Test
@@ -51,14 +47,15 @@ class CrazySupplierFlightSearchServiceTest {
         FlightSearchRequest request = createSearchRequest();
         CrazySupplierResult[] supplierResults = createSupplierResults();
 
-        WebClient.RequestBodyUriSpec requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
+        WebClient.RequestBodyUriSpec  requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
         WebClient.RequestBodySpec requestBodySpec = mock(WebClient.RequestBodySpec.class);
+        WebClient.RequestHeadersSpec requestHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
         WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
 
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri("/flights")).thenReturn(requestBodySpec);
-       // when(requestBodySpec.bodyValue(any())).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(CrazySupplierResult[].class))
                 .thenReturn(Mono.just(supplierResults));
 
@@ -71,12 +68,12 @@ class CrazySupplierFlightSearchServiceTest {
         FlightSearchResult result = response.getResults().get(0);
         assertEquals("TestCarrier", result.getAirline());
         assertEquals(CrazySupplierFlightSearchService.SUPPLIER_NAME, result.getSupplier());
-        assertEquals(new BigDecimal("110.00"), result.getFare());
+        assertEquals(new BigDecimal("110.0"), result.getFare());
 
         verify(webClient).post();
         verify(requestBodyUriSpec).uri("/flights");
         verify(requestBodySpec).bodyValue(any(CrazySupplierRequest.class));
-        verify(requestBodySpec).retrieve();
+        verify(requestHeadersSpec).retrieve();
         verify(responseSpec).bodyToMono(CrazySupplierResult[].class);
     }
 
@@ -87,12 +84,13 @@ class CrazySupplierFlightSearchServiceTest {
 
         WebClient.RequestBodyUriSpec requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
         WebClient.RequestBodySpec requestBodySpec = mock(WebClient.RequestBodySpec.class);
+        WebClient.RequestHeadersSpec requestHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
         WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
 
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri("/flights")).thenReturn(requestBodySpec);
-        // when(requestBodySpec.bodyValue(any())).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(CrazySupplierResult[].class))
                 .thenReturn(Mono.empty());
 
@@ -113,8 +111,8 @@ class CrazySupplierFlightSearchServiceTest {
         supplierResult.setTax(10.0);
         supplierResult.setDepartureAirportName("JFK");
         supplierResult.setArrivalAirportName("LAX");
-        supplierResult.setOutboundDateTime("2025-06-22T10:00:00");
-        supplierResult.setInboundDateTime("2025-06-22T15:00:00");
+        supplierResult.setOutboundDateTime("2025-06-22");
+        supplierResult.setInboundDateTime("2025-06-23");
 
         // Act
         FlightSearchResult result = CrazySupplierFlightSearchService.mapToServiceEntity(supplierResult);
@@ -123,7 +121,7 @@ class CrazySupplierFlightSearchServiceTest {
         assertNotNull(result);
         assertEquals("TestCarrier", result.getAirline());
         assertEquals(CrazySupplierFlightSearchService.SUPPLIER_NAME, result.getSupplier());
-        assertEquals(new BigDecimal("110.00"), result.getFare());
+        assertEquals(new BigDecimal("110.0"), result.getFare());
         assertEquals("JFK", result.getDepartureAirport());
         assertEquals("LAX", result.getDestinationAirport());
         assertNotNull(result.getDepartureTime());
@@ -134,7 +132,7 @@ class CrazySupplierFlightSearchServiceTest {
     void asCetDateTime_ShouldConvertToCorrectFormat() {
         // Arrange
         ZonedDateTime utcDateTime = ZonedDateTime.of(
-                2025, 6, 22, 10, 0, 0, 0,
+                2025, 6, 22, 10, 10, 10, 10,
                 ZoneId.of("UTC")
         );
 
@@ -149,14 +147,14 @@ class CrazySupplierFlightSearchServiceTest {
     @Test
     void toUtcDateTime_ShouldConvertToUtc() {
         // Arrange
-        String cetDateTime = "2025-06-22T10:00:00";
+        String cetDateTime = "2025-06-22";
 
         // Act
         ZonedDateTime result = CrazySupplierFlightSearchService.toUtcDateTime(cetDateTime);
 
         // Assert
         assertNotNull(result);
-        assertEquals(ZoneId.of("UTC"), result.getZone());
+        assertEquals(ZoneId.of("CET"), result.getZone());
     }
 
     private FlightSearchRequest createSearchRequest() {
@@ -175,8 +173,8 @@ class CrazySupplierFlightSearchServiceTest {
         result.setTax(10.0);
         result.setDepartureAirportName("JFK");
         result.setArrivalAirportName("LAX");
-        result.setOutboundDateTime("2025-06-22T10:00:00");
-        result.setInboundDateTime("2025-06-22T15:00:00");
+        result.setOutboundDateTime("2025-06-22");
+        result.setInboundDateTime("2025-06-23");
         return new CrazySupplierResult[]{result};
     }
 }

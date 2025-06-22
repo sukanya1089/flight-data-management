@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -132,13 +129,9 @@ public class CrazySupplierFlightSearchService implements FlightSearchService {
 
     private final WebClient webClient;
 
-    @Value("${crazy-supplier.url}")
-    private String crazySupplierUrl;
-
-    public CrazySupplierFlightSearchService(WebClient.Builder webClientBuilder) {
+    public CrazySupplierFlightSearchService(WebClient.Builder webClientBuilder, @Value("${crazy-supplier.url}") String crazySupplierUrl) {
         this.webClient = webClientBuilder.baseUrl(crazySupplierUrl).build();
     }
-
 
     @Override
     public FlightSearchResponse findFlights(FlightSearchRequest searchRequest) {
@@ -184,7 +177,7 @@ public class CrazySupplierFlightSearchService implements FlightSearchService {
     }
 
     static ZonedDateTime toUtcDateTime(String zonedDateTime) {
-        return LocalDateTime.parse(zonedDateTime).atZone(ZoneId.of("CET")).withZoneSameInstant(ZoneOffset.UTC);
+        return LocalDate.parse(zonedDateTime).atStartOfDay(ZoneId.of("CET"));
     }
 
 }
