@@ -17,11 +17,13 @@ public class FlightController {
 
     @PostMapping
     public ResponseEntity<Flight> createFlight(@RequestBody Flight flight) {
+        Validations.validateFlight(flight);
         return ResponseEntity.ok(flightService.saveFlight(flight));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody Flight flight) {
+        Validations.validateFlight(flight);
         return ResponseEntity.ok(flightService.updateFlight(id, flight));
     }
 

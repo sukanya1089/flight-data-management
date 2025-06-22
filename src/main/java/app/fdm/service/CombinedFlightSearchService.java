@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
@@ -26,6 +27,7 @@ public class CombinedFlightSearchService implements FlightSearchService {
     public FlightSearchResponse findFlights(FlightSearchRequest flightSearchRequest) {
         List<FlightSearchResponse> results = Stream.of(localFlightSearchService, crazySupplierFlightSearchService)
                 .map(r -> safeSearch(r, flightSearchRequest))
+                .filter(Objects::nonNull)
                 .toList();
         return FlightSearchResponse.combine(results);
     }

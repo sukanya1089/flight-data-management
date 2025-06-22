@@ -26,7 +26,7 @@ public class FlightSearchResponse {
     public static FlightSearchResponse combine(List<FlightSearchResponse> responses) {
         List<FlightSearchResult> combinedResults = new ArrayList<>();
         for (FlightSearchResponse response : responses) {
-            if (response.getResults() != null) {
+            if (response != null && response.getResults() != null) {
                 combinedResults.addAll(response.getResults());
             }
         }

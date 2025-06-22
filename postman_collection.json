@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "241b1bf5-9aed-4a07-8bee-73135a692459",
+		"name": "Flight Management API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30346581"
+	},
+	"item": [
+		{
+			"name": "Flight Management",
+			"item": [
+				{
+					"name": "Get Flight by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/{{flightId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								"{{flightId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Flight",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"airline\": \"Test Airline\",\n    \"supplier\": \"Test Supplier\",\n    \"fare\": 199.99,\n    \"departureAirport\": \"JFK\",\n    \"destinationAirport\": \"LAX\",\n    \"departureTime\": \"2025-06-22T10:00:00Z\",\n    \"arrivalTime\": \"2025-06-22T15:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Flight",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"airline\": \"Updated Airline\",\n    \"supplier\": \"Updated Supplier\",\n    \"fare\": 299.99,\n    \"departureAirport\": \"JFK\",\n    \"destinationAirport\": \"LAX\",\n    \"departureTime\": \"2025-06-22T10:00:00Z\",\n    \"arrivalTime\": \"2025-06-22T15:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights/{{flightId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								"{{flightId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Flight",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/{{flightId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								"{{flightId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flight Search",
+			"item": [
+				{
+					"name": "Search Flights (All Parameters)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/search?airline={{airline}}&from={{from}}&to={{to}}&departureTime={{departureTime}}&arrivalTime={{arrivalTime}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								"search"
+							],
+							"query": [
+								{
+									"key": "airline",
+									"value": "{{airline}}"
+								},
+								{
+									"key": "from",
+									"value": "{{from}}"
+								},
+								{
+									"key": "to",
+									"value": "{{to}}"
+								},
+								{
+									"key": "departureTime",
+									"value": "{{departureTime}}"
+								},
+								{
+									"key": "arrivalTime",
+									"value": "{{arrivalTime}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Flights (Basic)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/search?from=JFK&to=LAX",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								"search"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "JFK"
+								},
+								{
+									"key": "to",
+									"value": "LAX"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{username}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "flightId",
+			"value": "1"
+		},
+		{
+			"key": "airline",
+			"value": "Test Airline"
+		},
+		{
+			"key": "from",
+			"value": "JFK"
+		},
+		{
+			"key": "to",
+			"value": "LAX"
+		},
+		{
+			"key": "departureTime",
+			"value": "2025-06-22T10:00:00Z"
+		},
+		{
+			"key": "arrivalTime",
+			"value": "2025-06-22T15:00:00Z"
+		},
+		{
+			"key": "username",
+			"value": "user",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "c90a3e83-14be-42cc-b604-96f3418a4d2f",
+			"type": "string"
+		}
+	]
+}

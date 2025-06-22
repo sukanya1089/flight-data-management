@@ -21,22 +21,28 @@ public class FlightSearchController {
 
     @GetMapping
     public ResponseEntity<FlightSearchResponse> searchFlights(
+            @RequestParam String from,
+            @RequestParam String to,
             @RequestParam(required = false) String airline,
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to,
             @RequestParam(required = false) String departureTime,
             @RequestParam(required = false) String arrivalTime
     ) {
+        Validations.validateAirportCode(from, "from");
+        Validations.validateAirportCode(to, "to");
         FlightSearchRequest req = new FlightSearchRequest();
         req.setAirline(airline);
         req.setFrom(from);
         req.setTo(to);
 
         try {
-            if (departureTime != null)
+            if (departureTime != null) {
+                Validations.validateDateTime(departureTime, "departureTime");
                 req.setDepartureTime(java.time.ZonedDateTime.parse(departureTime));
-            if (arrivalTime != null)
+            }
+            if (arrivalTime != null) {
+                Validations.validateDateTime(arrivalTime, "arrivalTime");
                 req.setArrivalTime(java.time.ZonedDateTime.parse(arrivalTime));
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

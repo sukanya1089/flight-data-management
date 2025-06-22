@@ -176,6 +176,9 @@ public class CrazySupplierFlightSearchService implements FlightSearchService {
     }
 
     static String asCetDateTime(ZonedDateTime zonedDateTime) {
+        if (zonedDateTime == null) {
+            return null;
+        }
         ZonedDateTime cetZonedDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("CET"));
         return DateTimeFormatter.ISO_LOCAL_DATE.format(cetZonedDateTime);
     }
