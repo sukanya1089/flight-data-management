@@ -1,11 +1,15 @@
-package app.fdm.model;
+package app.fdm.repository.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 @Entity
-public class Flight {
+public class FlightEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

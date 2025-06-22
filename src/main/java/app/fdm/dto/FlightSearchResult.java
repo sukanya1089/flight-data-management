@@ -3,7 +3,7 @@ package app.fdm.dto;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-public class FlightResponse {
+public class FlightSearchResult {
 
     private String airline;
     private String supplier;
@@ -12,8 +12,6 @@ public class FlightResponse {
     private String destinationAirport;
     private ZonedDateTime departureTime;
     private ZonedDateTime arrivalTime;
-
-    // Getters and Setters
 
     public String getAirline() {
         return airline;

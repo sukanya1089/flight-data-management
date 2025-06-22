@@ -10,8 +10,6 @@ public class FlightSearchRequest {
     private ZonedDateTime departureTime;
     private ZonedDateTime arrivalTime;
 
-    // Getters and Setters
-
     public String getAirline() {
         return airline;
     }

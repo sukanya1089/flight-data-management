@@ -1,13 +1,9 @@
 package app.fdm.api;
 
-import app.fdm.dto.FlightResponse;
-import app.fdm.dto.FlightSearchRequest;
-import app.fdm.model.Flight;
+import app.fdm.dto.Flight;
 import app.fdm.service.FlightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/flights")
@@ -42,28 +38,4 @@ public class FlightController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<FlightResponse>> searchFlights(
-            @RequestParam(required = false) String airline,
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to,
-            @RequestParam(required = false) String departureTime,
-            @RequestParam(required = false) String arrivalTime
-    ) {
-        FlightSearchRequest req = new FlightSearchRequest();
-        req.setAirline(airline);
-        req.setFrom(from);
-        req.setTo(to);
-
-        try {
-            if (departureTime != null)
-                req.setDepartureTime(java.time.ZonedDateTime.parse(departureTime));
-            if (arrivalTime != null)
-                req.setArrivalTime(java.time.ZonedDateTime.parse(arrivalTime));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        return ResponseEntity.ok(flightService.searchFlights(req));
-    }
 }
